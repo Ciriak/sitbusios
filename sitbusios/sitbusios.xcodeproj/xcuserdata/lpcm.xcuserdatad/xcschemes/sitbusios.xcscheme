@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E4234BE21CB50DA80054B0B4"
+               BlueprintIdentifier = "E443F0C91CB5432F00871AD1"
                BuildableName = "sitbusios.app"
                BlueprintName = "sitbusios"
                ReferencedContainer = "container:sitbusios.xcodeproj">
@@ -32,7 +32,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E4234BE21CB50DA80054B0B4"
+            BlueprintIdentifier = "E443F0C91CB5432F00871AD1"
             BuildableName = "sitbusios.app"
             BlueprintName = "sitbusios"
             ReferencedContainer = "container:sitbusios.xcodeproj">
@@ -55,7 +55,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E4234BE21CB50DA80054B0B4"
+            BlueprintIdentifier = "E443F0C91CB5432F00871AD1"
             BuildableName = "sitbusios.app"
             BlueprintName = "sitbusios"
             ReferencedContainer = "container:sitbusios.xcodeproj">
@@ -74,7 +74,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E4234BE21CB50DA80054B0B4"
+            BlueprintIdentifier = "E443F0C91CB5432F00871AD1"
             BuildableName = "sitbusios.app"
             BlueprintName = "sitbusios"
             ReferencedContainer = "container:sitbusios.xcodeproj">
