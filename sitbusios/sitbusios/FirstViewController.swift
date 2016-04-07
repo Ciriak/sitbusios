@@ -7,11 +7,12 @@
 //
 
 import UIKit
-//import Alamofire  <-Pas moyen, même avec un Podfile il veut pas
+import Alamofire
+import SwiftyJSON
 
 
 var token = "5beafb4a-b02f-429c-8222-cd92d1c20355";
-var baseUrl = "https://"+token+"@api.navitia.io/v1/coverage/fr-idf/";
+var baseUrl = "https://api.navitia.io/v1/coverage/fr-idf/";
 
 class FirstViewController: UIViewController {
     
@@ -20,40 +21,63 @@ class FirstViewController: UIViewController {
     // Coup de gueule :
     /* C'est quoi ce bordel pour récupérer un pauvre JSON ??? Sur mobile c'est genre le truc DE BASE dire qu'en web on peut faire $.getJSON('xx');, tsss c'est vraiment pourrie SWIFT !!!*/
     
-    // Pas moyen de
-    
+    // Poursuivont :) ...
 
     @IBOutlet weak var stopTimeRemaining: UILabel!
     
     @IBOutlet weak var stopDetailsLabel: UILabel!
-    let stopDetailsBase = "Avant le prochains passage à ";
+    var stopDetailsBase = "Avant le prochains passage à ";
     override func viewDidLoad() {
         
         
-        let requestURL: NSURL = NSURL(string: baseUrl+"coords/2.637192;48.804668/stop_areas?distance=500")!
-        let urlRequest: NSMutableURLRequest = NSMutableURLRequest(URL: requestURL)
-        let session = NSURLSession.sharedSession()
-        let task = session.dataTaskWithRequest(urlRequest) {
-            (data, response, error) -> Void in
-            
-            let httpResponse = response as! NSHTTPURLResponse
-            let statusCode = httpResponse.statusCode
-            
-            if (statusCode == 200) {
-                print("Everyone is fine, file downloaded successfully.")
-            }
-            else {
-                print("HTTP error "+String(statusCode)+" "+String(httpResponse));
-            }
-
+        let requestUrl = baseUrl+"coords/2.637192;48.804668/stop_areas?distance=500";
+        //on récupère les informations sur les arrêts les plus proches
+        Alamofire.request(.GET, requestUrl, encoding:.JSON)
+            .authenticate(user: token, password: "")
+            .responseJSON
+            { response in switch response.result {
+            case .Success(let JSON):
+                let response = JSON as? [NSObject: AnyObject]
+                //print(response["stop_areas"]![0]["label"]);
+                let s = response!["stop_areas"]![0]["label"];
+                self.stopDetailsLabel.text = self.stopDetailsBase+String(s);
+                
+                
+                case .Failure(let error):
+                print("Request failed with error: \(error)")
+                }
         }
         
-        task.resume();
+        // on récuère les horaires de l'arrêt le plus proche
+        let requestUrl2 = baseUrl+"stop_areas/stop_area:OIF:SA:48:7133/stop_schedules";
+        
+        Alamofire.request(.GET, requestUrl2, encoding:.JSON)
+            .authenticate(user: token, password: "")
+            .responseJSON
+            { response in switch response.result {
+            case .Success(let JSON):
+                let response = JSON as? [NSObject: AnyObject]
+                //print(response["stop_areas"]![0]["label"]);
+                let s = response!["stop_schedules"]![0]["date_times"]!![0]["date_time"];
+                let stopTime = String(s);
+                
+                // on convertit la date en format lisible
+                let dateFormatter = NSDateFormatter()
+                dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+                dateFormatter.timeZone = NSTimeZone.localTimeZone()
+                dateFormatter.dateFormat = "yyyyMMdd'T'HHmmssZZZ"
+                let dateObject = dateFormatter.dateFromString(stopTime);
+                
+                print(dateObject);
+                
+                
+                
+            case .Failure(let error):
+                print("Request failed with error: \(error)")
+                }
+        }
     
-        print(baseUrl);
         super.viewDidLoad()
-        stopTimeRemaining.text = "8 minutes";
-        stopDetailsLabel.text = stopDetailsBase+"Grand Champs";
         
     }
 
